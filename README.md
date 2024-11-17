@@ -1,7 +1,7 @@
 # Multiple Chatbots
 
 <p align="center">
-  <img src="https://github.com/user-attachments/assets/84150b42-3c3c-442b-9bd3-a80ce47c7ae2">
+  <img src="https://github.com/user-attachments/assets/a6cc4f5a-5255-4dcc-b085-c02ba5bd3916">
 </p>
 
 ## Chat with Multiple AI Assistants simultaneously

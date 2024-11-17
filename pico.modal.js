@@ -24,6 +24,7 @@ const toggleModal = (event) => {
 
 // Open modal
 const openModal = (modal) => {
+    document.querySelector("body").style.minHeight= "450px";
   const { documentElement: html } = document;
   const scrollbarWidth = getScrollbarWidth();
   if (scrollbarWidth) {

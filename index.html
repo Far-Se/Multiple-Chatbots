@@ -13,7 +13,6 @@
 
 <body>
     <main class="flex_center main">
-        <div class="topPadding extVisisble"></div>
         <h1 class="websiteVisible title ">Multiple AI Assistants</h1>
         <div class="pico" id="mainBox">
             <section>
@@ -40,7 +39,7 @@
             </section>
         </div>
         <div class="pico">
-            <main >
+            <main>
                 <!-- <h1 class="title">Toggle Chatbots</h1> -->
                 <div id="chatButtons">
                     <div role="group">
@@ -56,12 +55,21 @@
         <div class="pico">
             <section class="flex_center">
                 <footer>
+
                     <label>
                         <input type="checkbox" name="ctrlEnter" id="ctrlEnter" />
                         Submit by Ctrl + Enter
                     </label>
+
+                </footer>
+                <footer class="minSettings">
                     <label class="extVisisble">
-                        <a id="shortcutEditor" href="#">✏️ Ctrl+Shift+Q</a>
+                        <a data-tooltip="Change Shortcut" id="shortcutEditor" href="#"> Alt+Q</a>
+                    </label>
+
+                    <label>
+                        <a data-tooltip="Change Custom CSS" id="changeCSS" data-target="customcss-modal" href="#">
+                            Change CSS</a>
                     </label>
 
                 </footer>
@@ -85,7 +93,8 @@
                 <p>
                     Name:
                 </p>
-                <input type="text" name="promptName" placeholder="Prompt Name" aria-label="Prompt Name" autocomplete="off">
+                <input type="text" name="promptName" placeholder="Prompt Name" aria-label="Prompt Name"
+                    autocomplete="off">
                 <p>
                     Prompt:
                 </p>
@@ -95,6 +104,24 @@
                     <button class="outline secondary" data-target="edit-modal" id="deletePrompt"> Delete
                     </button>
                     <button data-target="edit-modal" id="savePrompt">Save</button>
+                </footer>
+            </article>
+        </dialog>
+    </div>
+
+    <div class="pico">
+        <dialog id="customcss-modal">
+            <article>
+                <header>
+                    <button aria-label="Close" class="closeEvent" rel="prev" data-target="customcss-modal"></button>
+                    <p>
+                        <strong>✒ Set Custom CSS</strong>
+                    </p>
+                </header>
+                <textarea name="customCSS" placeholder="Style this app how you want"
+                    aria-label="CSS Placehoder"></textarea>
+                <footer>
+                    <button data-target="customcss-modal" id="saveCSS">Save</button>
                 </footer>
             </article>
         </dialog>

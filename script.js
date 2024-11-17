@@ -4,7 +4,7 @@ let disabledBots = [];
 let predefinedPrompts = [];
 let editingID = -1;
 let submitByCtrlEnter = false;
-let storage = async () => await chrome.storage.local.get(["disabledChatbots", "predefinedPrompts", "ctrlEnter"]);
+let storage = async () => await chrome.storage.local.get(["disabledChatbots", "predefinedPrompts", "ctrlEnter", "css"]);
 const chatBots = ["ChatGPT", "Claude", "Gemini", "Bing", "Perplexity"];
 let allData = {};
 let storageSet = async (data) => {
@@ -39,12 +39,19 @@ const setOfPredefinedPrompts = [
 ];
 document.addEventListener("DOMContentLoaded", async function () {
     if (Object.prototype.hasOwnProperty.call(chrome, "storage")) {
+        document.querySelector("html").classList.add("app");
         document.querySelectorAll(".websiteVisible").forEach((element) => element.style.display = "none");
         allData = await storage();
         console.log(allData);
     } else {
+        document.querySelector("html").classList.add("web");
         document.querySelectorAll(".extVisisble").forEach((element) => element.style.display = "none");
     }
+
+    let css = storageGet("css") || "";
+    if (css) document.querySelector("body").insertAdjacentHTML("beforeend", `<style id="customCSS">${css}</style>`);
+    document.querySelector("[name=\"customCSS\"]").value = css;
+
     disabledBots = JSON.parse(storageGet("disabledChatbots")) || [];
     for (let i = 0; i < chatBots.length; i++) {
         if (disabledBots.includes(chatBots[i])) continue;
@@ -139,6 +146,9 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.querySelector("[name=\"prompt\"]").value = "";
         toggleModal(event);
     });
+    document.querySelector("#changeCSS").addEventListener("click", (event) => {
+        toggleModal(event);
+    });
     document.querySelector("#shortcutEditor").addEventListener("click", () => {
         chrome.runtime.sendMessage({
             action: "openShortcutEditor"
@@ -151,7 +161,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     });
     if (Object.prototype.hasOwnProperty.call(chrome, "storage")) {
         let keys = await chrome.commands.getAll();
-        if (keys.length) document.querySelector("#shortcutEditor").innerText = `✏️ ${keys[0].shortcut}`;
+        if (keys.length) {
+            if (keys[0].shortcut.length < 2) keys[0].shortcut = "Edit Shortcut";
+            document.querySelector("#shortcutEditor").innerText = `${keys[0].shortcut}`;
+        }
     }
     updateChatButtonsWidth();
     window.addEventListener("resize", updateChatButtonsWidth);
@@ -161,11 +174,13 @@ let updateChatButtonsWidth = () => {
     document.querySelector("#chatButtons").style.width = document.querySelector("#mainBox").getBoundingClientRect().width.toString() + "px";
 };
 let addPredefinedButtons = () => {
-    
+
     [...document.querySelectorAll(".askButtons .buttons button:not(#addNew)")].map((button) => button.remove());
 
     for (let i = 0; i < predefinedPrompts.length; i++)
         document.querySelector(".askButtons .buttons").insertAdjacentHTML("beforeend", `<button class="outline prefPromptButton" data-id="${i}">${predefinedPrompts[i].title}</button>`);
+
+    updateChatButtonsWidth();
 };
 let openChatBots = (query) => {
     if (Object.prototype.hasOwnProperty.call(chrome, "storage")) {
@@ -205,9 +220,9 @@ document.querySelector("#savePrompt").addEventListener("click", (event) => {
     toggleModal(event);
     let title = document.querySelector("input[name=\"promptName\"]").value;
     let prompt = document.querySelector("textarea[name=\"prompt\"]").value;
-    if(editingID != -1) predefinedPrompts[editingID] = { title, prompt };
+    if (editingID != -1) predefinedPrompts[editingID] = { title, prompt };
     else
-    predefinedPrompts.push({ title, prompt });
+        predefinedPrompts.push({ title, prompt });
     editingID = -1;
     // localStorage.setItem('predefinedPrompts', JSON.stringify(predefinedPrompts));
     storageSet({ "predefinedPrompts": JSON.stringify(predefinedPrompts) });
@@ -215,6 +230,14 @@ document.querySelector("#savePrompt").addEventListener("click", (event) => {
 
     document.querySelector("[name=\"promptName\"]").value = "";
     document.querySelector("[name=\"prompt\"]").value = "";
+});
+document.querySelector("#saveCSS").addEventListener("click", (event) => {
+    toggleModal(event);
+    let css = document.querySelector("textarea[name=\"customCSS\"]").value;
+    document.querySelector("#customCSS")?.remove();
+    document.querySelector("body").insertAdjacentHTML("beforeend", `<style id="customCSS">${css}</style>`);
+    // localStorage.setItem('css', css);
+    storageSet({ "css": css });
 });
 
 document.querySelector("#deletePrompt").addEventListener("click", (event) => {
@@ -229,11 +252,7 @@ document.querySelector("#deletePrompt").addEventListener("click", (event) => {
     document.querySelector("[name=\"promptName\"]").value = "";
     document.querySelector("[name=\"prompt\"]").value = "";
 
-    document.querySelectorAll(".askButtons .buttons button").forEach((button) => {
-        if (button.dataset.id == editingID) {
-            button.remove();
-        }
-    });
+    addPredefinedButtons();
 });
 
 function moveElementUp(array, index) {
