@@ -16,9 +16,9 @@ export default [...compat.extends("eslint:recommended"), {
     languageOptions: {
         globals: {
             ...globals.browser,
+            ...globals.node ,
             chrome: "readonly",
         },
-
         ecmaVersion: 12,
         sourceType: "module",
     },
