@@ -1,0 +1,119 @@
+
+:root {
+    --textColor: #E0E3E7;
+    --textColor2: #7b8495;
+    --color1: #13171F;
+    --color2: #181C25;
+    --color3: #525F7A;
+}
+
+body {
+    /* background-color: var(--color1); */
+    /* color: var(--textColor); */
+    min-width: 600px;
+}
+
+.flex_center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.pico label {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+footer label {
+    zoom: 0.75;
+}
+
+.topPadding,
+h1.title {
+    padding: 5vw 0 2vw 0;
+}
+
+.shadow1 {
+    --tw-shadow: 0 20px 25px -5px #0000001a, 0 8px 10px -6px #0000001a;
+    --tw-ring-color: #3b82f680;
+    --tw-ring-offset-shadow: 0 0 #0000;
+    --tw-ring-shadow: 0 0 #0000;
+    --tw-shadow-colored: 0 20px 25px -5px var(--tw-shadow-color), 0 8px 10px -6px var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+}
+
+.main>.pico {
+    max-width: 700px;
+}
+
+#chatButtons {
+    max-width: 700px;
+}
+
+.pico .askButtons {
+    --pico-form-element-spacing-horizontal: 0.4rem;
+    --pico-form-element-spacing-vertical: 0.2rem;
+
+    grid-template-columns: repeat(auto-fit, minmax(0%, 1fr)) !important;
+}
+
+.pico .chat_button {
+    --pico-form-element-spacing-horizontal: 0.4rem;
+    --pico-form-element-spacing-vertical: 0.2rem;
+}
+
+div#mainBox :is(section,article) {
+    margin-bottom: 0px;
+}
+
+[role=group] *:first-child {
+    border-radius: 0px;
+}
+
+[role=group] *:last-child {
+    border-radius: 0px;
+}
+
+.pico button.chat_button.disabled {
+    background: var(--pico-card-sectioning-background-color);
+    border: none;
+}
+.pico [role=group]:has(button:focus,[type=submit]:focus,[type=button]:focus,[role=button]:focus) {
+    box-shadow: none !important;
+}
+.askButtons>div:first-child {
+    grid-column: span 4 / span 64;
+    display: flex;
+    justify-content: flex-end;
+    flex-direction: column;
+}
+
+.mainAsk {
+    width: 100%;
+}
+
+.buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+.pico .info {
+    color: var(--pico-blockquote-footer-color);
+    font-style: italic;
+    font-size: 10px;
+    text-align: right;
+}
+
+.main footer button.outline {
+    margin-bottom: 5px;
+    margin-left: 5px;
+}
+.pico button.chat_button:not(.disabled) {
+    background: var(--pico-card-sectioning-background-color);
+    border-top: none;
+    border-left: none;
+    border-right: none;
+}

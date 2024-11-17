@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Multiple AI Assistants</title>
+    <link rel="stylesheet" type="text/css" href="pico.conditional.slate.min.css">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="icons/icon_dark-48x48.png">
+
+</head>
+
+<body>
+    <main class="flex_center main">
+        <div class="topPadding extVisisble"></div>
+        <h1 class="websiteVisible title ">Multiple AI Assistants</h1>
+        <div class="pico" id="mainBox">
+            <section>
+                <article>
+                    <textarea autofocus name="query" id="query" placeholder="Ask AI Assistants..."
+                        aria-label="Ask AI Assistants..." cols="50"></textarea>
+                    <footer>
+                        <div class="grid askButtons">
+                            <div>
+                                <div class="buttons">
+                                    <button class="outline" id="addNew" data-target="edit-modal"
+                                        data-tooltip="Add Predefined Prompt">+</button>
+                                </div>
+                                <p class="info">Right Click to Edit. Middle Click to move up.</p>
+                            </div>
+                            <div>
+                                <div>
+                                    <button class="mainAsk">Ask</button>
+                                </div>
+                            </div>
+                        </div>
+                    </footer>
+                </article>
+            </section>
+        </div>
+        <div class="pico">
+            <main >
+                <!-- <h1 class="title">Toggle Chatbots</h1> -->
+                <div id="chatButtons">
+                    <div role="group">
+                        <button class="chat_button disabled outline" value="ChatGPT">ChatGPT</button>
+                        <button class="chat_button disabled outline" value="Claude">Claude</button>
+                        <button class="chat_button disabled outline" value="Gemini">Gemini</button>
+                        <button class="chat_button disabled outline" value="Bing">Bing</button>
+                        <button class="chat_button disabled outline" value="Perplexity">Perplexity</button>
+                    </div>
+                </div>
+            </main>
+        </div>
+        <div class="pico">
+            <section class="flex_center">
+                <footer>
+                    <label>
+                        <input type="checkbox" name="ctrlEnter" id="ctrlEnter" />
+                        Submit by Ctrl + Enter
+                    </label>
+                    <label class="extVisisble">
+                        <a id="shortcutEditor" href="#">✏️ Ctrl+Shift+Q</a>
+                    </label>
+
+                </footer>
+                <div class="websiteVisible">
+                    <p class="small" id="geminiInfo" style="display:none; zoom:0.6"><a
+                            href="https://gist.github.com/Far-Se/565b4668886732fec16b8b41afdd3048" target="_blank">
+                            Gemini Tampermonkey Script</a></p>
+                </div>
+            </section>
+        </div>
+    </main>
+    <div class="pico">
+        <dialog id="edit-modal">
+            <article>
+                <header>
+                    <button aria-label="Close" class="closeEvent" rel="prev" data-target="edit-modal"></button>
+                    <p>
+                        <strong>✒ Edit Predefined Prompt</strong>
+                    </p>
+                </header>
+                <p>
+                    Name:
+                </p>
+                <input type="text" name="promptName" placeholder="Prompt Name" aria-label="Prompt Name" autocomplete="off">
+                <p>
+                    Prompt:
+                </p>
+                <textarea name="prompt" placeholder="You are a very smart AI Assistant and..."
+                    aria-label="Prompt Placehoder"></textarea>
+                <footer>
+                    <button class="outline secondary" data-target="edit-modal" id="deletePrompt"> Delete
+                    </button>
+                    <button data-target="edit-modal" id="savePrompt">Save</button>
+                </footer>
+            </article>
+        </dialog>
+    </div>
+
+    <script src="script.js"></script>
+    <script src="pico.modal.js"></script>
+</body>
+
+</html>
