@@ -77,6 +77,12 @@ h1.title {
 
 div#mainBox :is(section, article) {
     margin-bottom: 0px;
+    border-radius: 0px;
+}
+
+
+#mainBox textarea + footer {
+    border-radius: 0px;
 }
 
 [role=group] *:first-child {
