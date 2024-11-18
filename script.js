@@ -148,7 +148,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 document.querySelectorAll(".extVisisble").forEach((element) => element.style.display = "none");
             }
             predefinedPrompts = JSON.parse(storageGet("predefinedPrompts")) ?? [...setOfPredefinedPrompts];
-            defaultPrompt = parseInt(storageGet("defaultPrompt")) ?? -1;
+            defaultPrompt = parseInt(storageGet("defaultPrompt") ?? -1);
             if(defaultPrompt > predefinedPrompts.length - 1) defaultPrompt = -1;
             submitByCtrlEnter = JSON.parse(storageGet("ctrlEnter")) ?? false;
         }

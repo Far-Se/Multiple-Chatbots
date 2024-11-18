@@ -23,27 +23,28 @@ const archive = archiver("zip", {
     zlib: { level: 9 }
 });
 
-output.on("close", function () {
+output.on("close", () => {
     console.log(`Archive created successfully! Total bytes: ${archive.pointer()}`);
 });
 
-archive.on("error", function (err) {
+archive.on("error", (err) => {
     throw err;
 });
 
 archive.pipe(output);
-let files = [
+const files = [
     "background.js",
     "index.html",
     "pico.conditional.slate.min.css",
+    "pico.modal.js",
     "manifest.json",
     "script.js",
     "style.css",
 ];
 for(const file of files)
-{
+
     archive.file(join(__dirname, file), { name: file });
-}
+
 archive.directory(join(__dirname, "icons"), "icons");
 
 archive.finalize();
