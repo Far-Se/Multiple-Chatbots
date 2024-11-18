@@ -69,6 +69,17 @@ h1.title {
 
     grid-template-columns: repeat(auto-fit, minmax(0%, 1fr)) !important;
 }
+.pico .askButtons button {
+    position: relative;
+}
+.pico .askButtons.shortcutEnabled button::after {
+    content: attr(data-shortcut);
+    position: absolute;
+    font-size: 12px;
+    right: 0px;
+    top: -10px;
+}
+
 
 .pico .chat_button {
     --pico-form-element-spacing-horizontal: 0.4rem;
@@ -125,8 +136,7 @@ div#mainBox :is(section, article) {
     box-shadow: inset 0 0px 10px 5px #43434333;
 }
 
-.pico .buttons button:hover {
-    
+.pico .buttons button:hover, .pico button.outline.prefPromptButton.selected {
     box-shadow: inset 0px -1px 1px var(--pico-primary), inset 0 0px 10px 5px #43434333;
 }
 
@@ -135,6 +145,10 @@ div#mainBox :is(section, article) {
     font-style: italic;
     font-size: 10px;
     text-align: right;
+}
+.pico .info span::before {
+    content: "Right Click to Edit.\A Middle Click to move up. \A Long Left Click to save as default prompt.\A Alt+[1-9] to send specific prompt.";
+    white-space: pre;
 }
 
 .main footer button.outline {

@@ -1,36 +1,33 @@
+
 chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
+
     if (request.action === "openShortcutEditor") {
         chrome.tabs.create({ url: "chrome://extensions/shortcuts#:~:text=Multiple%20Chatbots" });
         return sendResponse({ success: true });
     }
-    if (request.action !== "sendQueryToAssistants")
-        return sendResponse({ success: false });
+
+    if (request.action !== "sendQueryToAssistants") return sendResponse({ success: false });
+
     let chatBots = ["Perplexity", "Bing", "Gemini", "Claude", "ChatGPT"];
-    let disabledBots = request.disabledBots;
+
+    const disabledBots = request.disabledBots;
     chatBots = chatBots.filter((bot) => !disabledBots.includes(bot));
-    let tabs = [];
+
+    const tabs = [];
     const prompt = encodeURIComponent(request.query);
+    const links = {
+        "ChatGPT": `https://www.chatgpt.com/?q=${prompt}`,
+        "Claude": `https://claude.ai/new?q=${prompt}`,
+        "Bing": `https://www.bing.com/chat?q=${prompt}&sendquery=1&FORM=SCCODX`,
+        "Perplexity": `https://www.perplexity.ai/search/new?q=${prompt}`
+    };
     for (let i = 0; i < chatBots.length; i++) {
 
-        if (chatBots[i] == "ChatGPT") {
-            const tab = await chrome.tabs.create({ url: `https://www.chatgpt.com/?q=${prompt}` });
-            tabs.push(tab.id);
-        }
-        else if (chatBots[i] == "Claude") {
-            const tab = await chrome.tabs.create({ url: `https://claude.ai/new?q=${prompt}` });
-            tabs.push(tab.id);
-        }
-        else if (chatBots[i] == "Gemini") {
-            const tab = await openGemini(request.query);
-            tabs.push(tab.id);
-        }
-        else if (chatBots[i] == "Bing") {
-            const tab = await chrome.tabs.create({ url: `https://www.bing.com/chat?q=${prompt}&sendquery=1&FORM=SCCODX` });
-            tabs.push(tab.id);
-        }
-        else if (chatBots[i] == "Perplexity") {
-            const tab = await chrome.tabs.create({ url: `https://www.perplexity.ai/search/new?q=${prompt}` });
-            tabs.push(tab.id);
+        if (chatBots[i] === "Gemini") {
+            tabs.push((await openGemini(request.query)).id);
+        } else {
+            if (links[chatBots[i]] === undefined) continue;
+            tabs.push((await chrome.tabs.create({ url: links[chatBots[i]] })).id);
         }
 
     }
@@ -40,8 +37,9 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
 
     sendResponse({ success: true });
 });
-let openGemini = async (query) => {
-    let newTab = await chrome.tabs.create({ url: "https://gemini.google.com/app" });
+
+const openGemini = async (query) => {
+    const newTab = await chrome.tabs.create({ url: "https://gemini.google.com/app" });
     let executed = false;
     const listener = chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
         if (executed || tabId !== newTab.id || changeInfo.status !== "complete") return false;
@@ -55,14 +53,11 @@ let openGemini = async (query) => {
                     setTimeout(() => document.querySelector(".send-button").click(), 400);
                 }, 1400);
             },
-            args: [query],
+            args: [query]
         });
     });
     return newTab;
 
 };
-chrome.commands.onCommand.addListener((command) => {
-    if (command === "_open_popup") {
-        chrome.action.openPopup();
-    }
-});
+
+chrome.commands.onCommand.addListener((command) => command === "_open_popup" && chrome.action.openPopup() );

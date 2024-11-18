@@ -17,14 +17,28 @@ export default [...compat.extends("eslint:recommended"), {
         globals: {
             ...globals.browser,
             ...globals.node ,
-            chrome: "readonly",
+            chrome: "readonly"
         },
         ecmaVersion: 12,
-        sourceType: "module",
+        sourceType: "module"
     },
 
     rules: {
-        semi: ["error", "always"],
-        quotes: ["error", "double"],
-    },
+        
+        "no-unused-vars": "warn",
+        "no-debugger": "error",
+        "curly": ["error", "multi-or-nest"],
+        "eqeqeq": ["error", "always"],
+        "no-var": "error",
+        "prefer-const": "error",
+        "quotes": ["error", "double"],
+        "semi": ["error", "always"],
+        "object-curly-spacing": ["error", "always"],
+        "array-bracket-spacing": ["error", "never"],
+        "eol-last": ["error", "always"],
+        "arrow-spacing": ["error", { "before": true, "after": true }],
+        "no-duplicate-imports": "error",
+        "template-curly-spacing": ["error", "never"],
+        "prefer-arrow-callback": "warn"
+    }
 }];
