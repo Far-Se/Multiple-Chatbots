@@ -69,9 +69,11 @@ h1.title {
 
     grid-template-columns: repeat(auto-fit, minmax(0%, 1fr)) !important;
 }
+
 .pico .askButtons button {
     position: relative;
 }
+
 .pico .askButtons.shortcutEnabled button::after {
     content: attr(data-shortcut);
     position: absolute;
@@ -80,6 +82,27 @@ h1.title {
     top: -10px;
 }
 
+.pico [role=group],
+.pico [role=search] {
+    --pico-spacing: 0;
+}
+
+.settingsPanel {
+
+    margin-top: var(--pico-spacing);
+}
+
+.websiteVisible.bottomLinks {
+    width: 100%;
+    display: flex;
+    justify-content: end;
+    align-items: end;
+    font-size: 12px;
+    flex-direction: column;
+}
+.websiteVisible.bottomLinks a {
+    text-decoration: none;
+}
 
 .pico .chat_button {
     --pico-form-element-spacing-horizontal: 0.4rem;
@@ -92,7 +115,7 @@ div#mainBox :is(section, article) {
 }
 
 
-#mainBox textarea + footer {
+#mainBox textarea+footer {
     border-radius: 0px;
 }
 
@@ -130,13 +153,15 @@ div#mainBox :is(section, article) {
     justify-content: flex-end;
     flex-wrap: wrap;
 }
+
 .pico .buttons button {
     border: none;
     border-radius: 0px;
     box-shadow: inset 0 0px 10px 5px #43434333;
 }
 
-.pico .buttons button:hover, .pico button.outline.prefPromptButton.selected {
+.pico .buttons button:hover,
+.pico button.outline.prefPromptButton.selected {
     box-shadow: inset 0px -1px 1px var(--pico-primary), inset 0 0px 10px 5px #43434333;
 }
 
@@ -146,6 +171,7 @@ div#mainBox :is(section, article) {
     font-size: 10px;
     text-align: right;
 }
+
 .pico .info span::before {
     content: "Right Click to Edit.\A Middle Click to move up. \A Long Left Click to save as default prompt.\A Alt+[1-9] to send specific prompt.";
     white-space: pre;
@@ -166,8 +192,15 @@ div#mainBox :is(section, article) {
 
 footer.minSettings {
     display: flex;
+    position: relative;
 }
-
+.settingsPanel {
+ position: relative;
+}
+.bottomLinks {
+    position: absolute;
+    top:0px;
+}
 footer.minSettings label {
     padding: 0px 10px;
 }

@@ -23,9 +23,9 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
     };
     for (let i = 0; i < chatBots.length; i++) {
 
-        if (chatBots[i] === "Gemini") {
+        if (chatBots[i] === "Gemini") 
             tabs.push((await openGemini(request.query)).id);
-        } else {
+         else {
             if (links[chatBots[i]] === undefined) continue;
             tabs.push((await chrome.tabs.create({ url: links[chatBots[i]] })).id);
         }
@@ -43,7 +43,7 @@ const openGemini = async (query) => {
     let executed = false;
     const listener = chrome.tabs.onUpdated.addListener((tabId, changeInfo) => {
         if (executed || tabId !== newTab.id || changeInfo.status !== "complete") return false;
-        chrome.tabs.onUpdated.removeListener(listener);
+        chrome.tabs.onUpdated.removeListener(listener); 
         executed = true;
         chrome.scripting.executeScript({
             target: { tabId },

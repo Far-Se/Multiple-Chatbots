@@ -51,7 +51,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     document.addEventListener("contextmenu", predefinedPromptsMiddleButton());
     document.addEventListener("mouseup", predefinedPromptsButtonMouseUp());
     document.addEventListener("mousedown", predefinedPromptsButtonMoouseDown());
-    window.addEventListener("resize", updateChatButtonsWidth);
 
 
     document.querySelector("#changeCSS").addEventListener("click", (event) => toggleModal(event));
@@ -114,7 +113,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         customCSS();
         initChatBots();
         addPredefinedButtons();
-        updateChatButtonsWidth();
 
         function customCSS() {
             const css = storageGet("css") ?? "";
@@ -149,8 +147,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 document.querySelector("html").classList.add("web");
                 document.querySelectorAll(".extVisisble").forEach((element) => element.style.display = "none");
             }
-            defaultPrompt = storageGet("defaultPrompt") ?? -1;
             predefinedPrompts = JSON.parse(storageGet("predefinedPrompts")) ?? [...setOfPredefinedPrompts];
+            defaultPrompt = parseInt(storageGet("defaultPrompt")) ?? -1;
+            if(defaultPrompt > predefinedPrompts.length - 1) defaultPrompt = -1;
             submitByCtrlEnter = JSON.parse(storageGet("ctrlEnter")) ?? false;
         }
     }
@@ -213,8 +212,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         };
     }
     document.addEventListener("keydown", (event) => {
-        if (!document.querySelector("#query").value.length) return;
-
         if (event.key === "Alt") {
             document.querySelector(".askButtons").classList.add("shortcutEnabled");
             event.preventDefault();
@@ -226,21 +223,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             document.querySelector(".askButtons").classList.remove("shortcutEnabled");
             event.preventDefault();
         }
+
         if (event.altKey && parseInt(event.key) >= 1 && parseInt(event.key) <= 9) {
+            if (!document.querySelector("#query").value.length) return;
+            event.preventDefault();
+        
             const num = predefinedPrompts.length - parseInt(event.key);
-            console.log(num);
+        
             if (num >= 0 && num < predefinedPrompts.length) {
                 const text = predefinedPrompts[num].prompt + "\n" + document.querySelector("#query").value;
                 openChatBots(text);
             }
-            event.preventDefault();
+            
         }
     });
 });
 
-const updateChatButtonsWidth = () => {
-    document.querySelector("#chatButtons").style.width = document.querySelector("#mainBox").getBoundingClientRect().width.toString() + "px";
-};
 
 const addPredefinedButtons = () => {
 
@@ -249,7 +247,6 @@ const addPredefinedButtons = () => {
     for (let i = 0; i < predefinedPrompts.length; i++)
         document.querySelector(".askButtons .buttons").insertAdjacentHTML("beforeend", `<button class="outline prefPromptButton" data-id="${i}" data-shortcut="${predefinedPrompts.length - i}" >${predefinedPrompts[i].title}</button>`);
     if (defaultPrompt !== -1) document.querySelector(`.prefPromptButton[data-id="${defaultPrompt}"]`).classList.add("selected");
-    updateChatButtonsWidth();
 };
 
 const openChatBots = (query) => {
