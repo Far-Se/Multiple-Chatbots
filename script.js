@@ -149,7 +149,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             }
             predefinedPrompts = JSON.parse(storageGet("predefinedPrompts")) ?? [...setOfPredefinedPrompts];
             defaultPrompt = parseInt(storageGet("defaultPrompt") ?? -1);
-            if(defaultPrompt > predefinedPrompts.length - 1) defaultPrompt = -1;
+            if (defaultPrompt > predefinedPrompts.length - 1) defaultPrompt = -1;
             submitByCtrlEnter = JSON.parse(storageGet("ctrlEnter")) ?? false;
         }
     }
@@ -227,14 +227,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         if (event.altKey && parseInt(event.key) >= 1 && parseInt(event.key) <= 9) {
             if (!document.querySelector("#query").value.length) return;
             event.preventDefault();
-        
+
             const num = predefinedPrompts.length - parseInt(event.key);
-        
+
             if (num >= 0 && num < predefinedPrompts.length) {
                 const text = predefinedPrompts[num].prompt + "\n" + document.querySelector("#query").value;
                 openChatBots(text);
             }
-            
+
         }
     });
 });
@@ -275,26 +275,27 @@ const openChatBots = (query) => {
 
 };
 
-document.querySelector("#savePrompt").addEventListener("click", (event) => {
-    toggleModal(event);
-    const title = document.querySelector("input[name='promptName']").value;
-    const prompt = document.querySelector("textarea[name='prompt']").value;
-    if (editingID !== -1) predefinedPrompts[editingID] = { title, prompt };
-    else
-        predefinedPrompts.push({ title, prompt });
-    editingID = -1;
-    storageSet({ "predefinedPrompts": JSON.stringify(predefinedPrompts) });
-    addPredefinedButtons();
-
-    document.querySelector("[name='promptName']").value = "";
-    document.querySelector("[name='prompt']").value = "";
-});
 document.querySelector("#saveCSS").addEventListener("click", (event) => {
     toggleModal(event);
     const css = document.querySelector("textarea[name='customCSS']").value;
     document.querySelector("#customCSS")?.remove();
     document.querySelector("body").insertAdjacentHTML("beforeend", `<style id="customCSS">${css}</style>`);
     storageSet({ "css": css });
+});
+
+document.querySelector("#savePrompt").addEventListener("click", (event) => {
+    toggleModal(event);
+    const title = document.querySelector("input[name='promptName']").value;
+    const prompt = document.querySelector("textarea[name='prompt']").value;
+    if (editingID !== -1) predefinedPrompts[editingID] = { title, prompt };
+    else
+        predefinedPrompts = [{ title, prompt }, ...predefinedPrompts];
+    editingID = -1;
+    storageSet({ "predefinedPrompts": JSON.stringify(predefinedPrompts) });
+    addPredefinedButtons();
+
+    document.querySelector("[name='promptName']").value = "";
+    document.querySelector("[name='prompt']").value = "";
 });
 
 document.querySelector("#deletePrompt").addEventListener("click", (event) => {
