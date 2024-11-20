@@ -1,3 +1,4 @@
+ 
 
 chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
 
@@ -8,31 +9,19 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
 
     if (request.action !== "sendQueryToAssistants") return sendResponse({ success: false });
 
-    let chatBots = ["Perplexity", "Bing", "Gemini", "Claude", "ChatGPT"];
-
-    const disabledBots = request.disabledBots;
-    chatBots = chatBots.filter((bot) => !disabledBots.includes(bot));
+    const chatBots = request.links;
 
     const tabs = [];
-    const prompt = encodeURIComponent(request.query);
-    const links = {
-        "ChatGPT": `https://www.chatgpt.com/?q=${prompt}`,
-        "Claude": `https://claude.ai/new?q=${prompt}`,
-        "Bing": `https://www.bing.com/chat?q=${prompt}&sendquery=1&FORM=SCCODX`,
-        "Perplexity": `https://www.perplexity.ai/search/new?q=${prompt}`
-    };
-    for (let i = 0; i < chatBots.length; i++) {
-
-        if (chatBots[i] === "Gemini") 
+    
+    for (const i of Object.keys(chatBots)) {
+        if (i === "Gemini") 
             tabs.push((await openGemini(request.query)).id);
-         else {
-            if (links[chatBots[i]] === undefined) continue;
-            tabs.push((await chrome.tabs.create({ url: links[chatBots[i]] })).id);
-        }
-
+         else 
+            tabs.push((await chrome.tabs.create({ url: chatBots[i] })).id);
     }
+    if(tabs.length === 1) return sendResponse({ success: true });
     await chrome.tabs.group({ tabIds: tabs }, async (groupId) => {
-        await chrome.tabGroups.update(groupId, { collapsed: false, title: request.minTitle });
+        await chrome.tabGroups.update(groupId, { collapsed: false, title: request.prompt.substring(0,50) });
     });
 
     sendResponse({ success: true });

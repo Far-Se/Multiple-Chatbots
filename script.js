@@ -1,11 +1,11 @@
 /* eslint-disable no-undef */
 
-let disabledBots = [];
+const disabledBots = [];
 let predefinedPrompts = [];
 let editingID = -1;
 let submitByCtrlEnter = false;
 const storage = async () => await chrome.storage.local.get(["disabledChatbots", "predefinedPrompts", "ctrlEnter", "css", "defaultPrompt"]);
-const chatBots = ["ChatGPT", "Claude", "Gemini", "Bing", "Perplexity"];
+
 let allData = {};
 let defaultPrompt = -1;
 const storageSet = async (data) => {
@@ -23,6 +23,17 @@ const storageGet = (key) => {
     else
         return localStorage.getItem(key);
 };
+const getBots = (prompt) => {
+    return {
+        "Bing": `https://www.bing.com/chat?q=${prompt}&sendquery=1&FORM=SCCODX`,
+        "Perplexity": `https://www.perplexity.ai/search/new?q=${prompt}`,
+        "Gemini": `https://gemini.google.com/app?q=${prompt}`,
+        "Mistral": `https://chat.mistral.ai/chat?q=${prompt}`,
+        "Claude": `https://claude.ai/new?q=${prompt}`,
+        "ChatGPT": `https://www.chatgpt.com/?q=${prompt}`,
+    };
+};
+const chatBots = Object.keys(getBots("")).slice().reverse();
 const setOfPredefinedPrompts = [
     {
         title: "Code Only",
@@ -94,7 +105,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     function chatBotsButtons() {
         return (button) => {
             button.addEventListener("click", () => {
-
                 if (disabledBots.includes(button.value)) {
                     disabledBots.splice(disabledBots.indexOf(button.value), 1);
                     button.classList.remove("disabled");
@@ -121,11 +131,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         function initChatBots() {
-            disabledBots = JSON.parse(storageGet("disabledChatbots")) ?? [];
-            for (let i = 0; i < chatBots.length; i++) {
-                if (disabledBots.includes(chatBots[i])) continue;
-                document.querySelector(`.chat_button[value="${chatBots[i]}"]`).classList.remove("disabled");
-            }
+
+            disabledBots.push(...JSON.parse(storageGet("disabledChatbots")) ?? []);
+
+            for (let i = 0; i < chatBots.length; i++)
+                document.querySelector("#chatButtons div").insertAdjacentHTML("beforeend", `<button class="chat_button outline ${disabledBots.includes(chatBots[i]) ? "disabled" : ""}" value="${chatBots[i]}">${chatBots[i]}</button>`);
+
             document.querySelector("#geminiInfo").style.display = document.querySelector(".chat_button[value='Gemini']:not(.disabled)") ? "block" : "none";
             if (submitByCtrlEnter) document.querySelector("#ctrlEnter").checked = true;
         }
@@ -250,23 +261,24 @@ const addPredefinedButtons = () => {
 };
 
 const openChatBots = (query) => {
+    const prompt = encodeURIComponent(query);
+    const botLinks = getBots(prompt);
     if (Object.prototype.hasOwnProperty.call(chrome, "storage")) {
+        //remove from botlinks disabledBots
+        const bots = Object.fromEntries(
+            Object.entries(botLinks).filter(([key]) => !disabledBots.includes(key))
+        );
+        console.log(bots);
         chrome.runtime.sendMessage({
             action: "sendQueryToAssistants",
             query: query,
-            disabledBots: disabledBots,
+            prompt: document.querySelector("#query").value,
+            links: bots,
+
             minTitle: document.querySelector("#query").value.substring(0, 50),
         });
         return;
     }
-    const prompt = encodeURIComponent(query);
-    const botLinks = {
-        "Perplexity": `https://www.perplexity.ai/search/new?q=${prompt}`,
-        "Bing": `https://www.bing.com/chat?q=${prompt}&sendquery=1&FORM=SCCODX`,
-        "Gemini": `https://gemini.google.com/app?q=${prompt}`,
-        "Claude": `https://claude.ai/new?q=${prompt}`,
-        "ChatGPT": `https://www.chatgpt.com/?q=${prompt}`
-    };
     const chatBotsReversed = chatBots.slice().reverse();
     for (const bot of chatBotsReversed) {
         if (disabledBots.includes(bot) || botLinks[bot] === undefined) continue;
