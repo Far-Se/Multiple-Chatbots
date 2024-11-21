@@ -24,12 +24,12 @@ const toggleModal = (event) => {
 
 // Open modal
 const openModal = (modal) => {
-    document.querySelector("body").style.minHeight= "450px";
+    document.querySelector("body").style.minHeight= "650px";
   const { documentElement: html } = document;
   const scrollbarWidth = getScrollbarWidth();
-  if (scrollbarWidth) {
+  if (scrollbarWidth) 
     html.style.setProperty(scrollbarWidthCssVar, `${scrollbarWidth}px`);
-  }
+  
   html.classList.add(isOpenClass, openingClass);
   setTimeout(() => {
     visibleModal = modal;
@@ -60,9 +60,9 @@ document.addEventListener("click", (event) => {
 
 // Close with Esc key
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && visibleModal) {
+  if (event.key === "Escape" && visibleModal) 
     closeModal(visibleModal);
-  }
+  
 });
 
 // Get scrollbar width

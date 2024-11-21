@@ -13,10 +13,12 @@ chrome.runtime.onMessage.addListener(async (request, _sender, sendResponse) => {
 
     const tabs = [];
     
+    console.log(chatBots);
     for (const i of Object.keys(chatBots)) {
         if (i === "Gemini") 
             tabs.push((await openGemini(request.query)).id);
          else 
+            // console.log(chatBots[i]);
             tabs.push((await chrome.tabs.create({ url: chatBots[i] })).id);
     }
     if(tabs.length === 1) return sendResponse({ success: true });

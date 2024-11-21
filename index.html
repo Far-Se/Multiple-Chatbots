@@ -58,6 +58,7 @@
                     </article>
                     <main class="shadow1">
                         <div id="chatButtons">
+                            <a href="#" id="openSettings" data-tooltip="Open Settings" data-target="settings-modal" data-placement="left">⚙</a>
                             <div role="group">
                             </div>
                         </div>
@@ -65,7 +66,7 @@
                 </div>
                 <section class="flex_center settingsPanel">
                     <div class="websiteVisible bottomLinks">
-                        
+
                         <a href="https://chromewebstore.google.com/detail/multiple-chatbots/beajhbkdffjaamaneibfjijepclcfaac?authuser=0&hl=en"
                             target="_blank">
                             Chrome Web Store
@@ -77,7 +78,7 @@
                             </svg>
                         </a>
                         <a href="https://github.com/Far-Se/Multiple-Chatbots" target="_blank">
-                            GitHub 
+                            GitHub
                             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20"
                                 viewBox="0 0 24 24">
                                 <path
@@ -86,36 +87,18 @@
                             </svg>
                         </a>
                     </div>
-                    <footer>
-
-                        <label>
-                            <input type="checkbox" name="ctrlEnter" id="ctrlEnter" />
-                            Submit by Ctrl + Enter
-                        </label>
-
-                    </footer>
-                    <footer class="minSettings">
-                        <label class="extVisisble">
-                            <a data-tooltip="Change Shortcut" id="shortcutEditor" href="#"> Alt+Q</a>
-                        </label>
-
-                        <label>
-                            <a data-tooltip="Change Custom CSS" id="changeCSS" data-target="customcss-modal" href="#">
-                                Change CSS</a>
-                        </label>
-
-                    </footer>
                     <div class="websiteVisible">
                         <p class="small" id="geminiInfo" style="display:none; zoom:0.6"><a
                                 href="https://gist.github.com/Far-Se/565b4668886732fec16b8b41afdd3048" target="_blank">
                                 Gemini Tampermonkey Script</a></p>
                     </div>
-                    
+
                 </section>
             </section>
         </div>
     </main>
 
+    <!-- Edit Modal -->
     <div class="pico">
         <dialog id="edit-modal">
             <article>
@@ -144,20 +127,40 @@
         </dialog>
     </div>
 
+    <!-- Settings Modal -->
     <div class="pico">
-        <dialog id="customcss-modal">
+        <dialog id="settings-modal">
             <article>
                 <header>
-                    <button aria-label="Close" class="closeEvent" rel="prev" data-target="customcss-modal"></button>
-                    <p>
-                        <strong>✒ Set Custom CSS</strong>
-                    </p>
+                    <button aria-label="Close" class="closeEvent" rel="prev" data-target="settings-modal"></button>
+                    <p><strong>Settings</strong> </p>
                 </header>
+                
+                <label>
+                    <input type="checkbox" name="ctrlEnter" id="ctrlEnter" />
+                    Submit by Ctrl + Enter
+                </label>
+
+                <label class="extVisisble">
+                    <input type="checkbox" name="compactTheme" id="compactTheme" />
+                    Compact Theme
+                </label>
+
+                <label class="extVisisble">
+                    Shortcut: <a data-tooltip="Change Shortcut" id="shortcutEditor" href="#"> Alt+Q</a>
+                </label>
+
+                <p>Bots: <br><small><b>state</b> is "enabled" "disabled" or  "hidden"</small></p>
+                
+                <textarea name="botList" placeholder="Json with bots" aria-label="Json Placehoder" row="30"></textarea>
+
+                <p>Custom CSS:</p>
                 <textarea name="customCSS" placeholder="Style this app however you want"
                     aria-label="CSS Placehoder"></textarea>
                 <footer>
-                    <button data-target="customcss-modal" id="saveCSS">Save</button>
-                </footer>
+                    <footer>
+                        <button data-target="settings-modal" id="saveSettings">Save</button>
+                    </footer>
             </article>
         </dialog>
     </div>

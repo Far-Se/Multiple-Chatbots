@@ -19,7 +19,7 @@ body {
     flex-direction: column;
 }
 
-.pico label {
+.pico xlabel {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -52,7 +52,7 @@ h1.title {
 }
 
 .app body>main.main {
-    margin: 20px;
+    margin: inherit;
 }
 
 .app .main>.pico {
@@ -203,4 +203,46 @@ footer.minSettings {
 }
 footer.minSettings label {
     padding: 0px 10px;
+}
+
+.pico :where(select,textarea):not([readonly]):is(:active,:focus)
+{
+    --pico-border-color: var(--pico-form-element-border-color);
+    box-shadow: inherit;
+}
+
+.app .compactTheme textarea {
+  margin: 10px 0px;
+}
+.app .compactTheme .pico button.chat_button:not(.disabled){
+    border: none;
+    font-weight: 500;
+    color: var(--pico-accordion-active-summary-color);
+}
+.app .compactTheme .pico .settingsPanel{
+    display: none;
+}
+.app .compactTheme #chatButtons > div button {
+    padding-bottom: 10px;
+}
+.app .compactTheme .pico .mainContainer footer {
+    padding-bottom: 0px;
+}
+
+a#openSettings {
+    position: absolute;
+    z-index: 999;
+    right: 2px;
+    top: -10px;
+    text-decoration: none;
+    font-size: 15px;
+    display: none;
+}
+
+#chatButtons {
+    position: relative;
+}
+
+#chatButtons:hover a#openSettings {
+    display: block;
 }
