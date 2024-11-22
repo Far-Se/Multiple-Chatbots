@@ -265,3 +265,77 @@ a#openSettings {
 #chatButtons:hover a#openSettings {
     display: block;
 }
+
+.botSetting {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    padding-bottom: 10px;
+}
+
+.botSetting .grid {
+
+    grid-template-columns: repeat(auto-fit, minmax(0%, 1fr)) !important;
+}
+
+#botList .grid {
+    gap: 0px;
+}
+
+#botList input {
+
+    margin-bottom: 0px;
+}
+
+.part2.grid input {
+    margin-bottom: 0px;
+    grid-column: span 7 / span 2;
+}
+svg {
+    pointer-events: none;
+}
+.pico #botList :is(input, button, select) {
+    border-radius: 0px;
+}
+
+.pico #botList button {
+    height: inherit;
+    padding: 0px;
+    margin: 0px;
+    --pico-border-color: var(--pico-form-element-border-color);
+    --pico-color: var(--pico-form-element-color);
+
+}
+
+.pico .botSetting .part1.grid {
+    grid-template-columns: 1.45fr 1.4fr 0.4fr !important;
+}
+
+.sort {
+    display: grid;
+    grid-template-columns: 5fr 5fr;
+    gap: 0px;
+    margin-bottom: var(--pico-spacing);
+}
+
+.part1 fieldset {
+    grid-column: span 3 /span 1;
+}
+.part2.grid {
+    margin-top: -18px;
+}
+.botSetting {
+    --pico-form-element-spacing-horizontal: 10px;
+    --pico-form-element-spacing-vertical: 5px;
+}
+.botListActions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.botListActions button {
+    --pico-form-element-spacing-horizontal: 10px;
+    --pico-form-element-spacing-vertical: 0px;
+    font-size: 15px;
+}

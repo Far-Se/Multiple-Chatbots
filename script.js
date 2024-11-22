@@ -25,16 +25,16 @@ const storageGet = (key) => {
     else
         return localStorage.getItem(key);
 };
-const getBots = (prompt) => {
+const getBots = (prompt, getDefault) => {
     if (prompt === undefined) prompt = "{prompt}";
     const botList = storageGet("botList");
-    if (botList) {
+    if (botList && getDefault === undefined) {
         try {
             const bots = JSON.parse(botList);
             for (const bot of Object.keys(bots))
                 bots[bot].link = bots[bot].link.replace("{prompt}", prompt);
 
-            return bots;
+            return { ...bots };
         } catch (error) {
             console.error("Error while loading botList from storage:", error);
         }
@@ -48,7 +48,7 @@ const getBots = (prompt) => {
         "Bing": { "state": "enabled", "link": `https://www.bing.com/chat?q=${prompt}&sendquery=1&FORM=SCCODX` },
     };
 };
-const chatBots = Object.keys(getBots(""));
+let  chatBots = [];
 const setOfPredefinedPrompts = [
     {
         title: "Code Only",
@@ -63,6 +63,23 @@ const setOfPredefinedPrompts = [
         prompt: "Provide clear and concise answers to my questions with minimum unnecessary information."
     },
 ];
+
+function changeKey(obj, oldKey, newKey) {
+    const newObj = {};
+  
+    for (const key in obj) {
+      if (Object.prototype.hasOwnProperty.call(obj, key)) {
+        if (key === oldKey) 
+          newObj[newKey] = obj[key];
+         else 
+          newObj[key] = obj[key];
+        
+      }
+    }
+  
+    return newObj;
+  }
+  
 document.addEventListener("DOMContentLoaded", async () => {
 
     let mouseDownTime = 0;
@@ -146,6 +163,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         function initChatBots() {
             const bots = getBots("{prompt}");
+            chatBots = Object.keys(bots);
             disabledBots.push(...Object.keys(bots).filter((bot) => bots[bot].state !== "enabled"));
             for (let i = 0; i < chatBots.length; i++) {
                 if (bots[chatBots[i]].state === "hidden") continue;
@@ -182,7 +200,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             const css = storageGet("css") ?? "";
             if (css) document.querySelector("body").insertAdjacentHTML("beforeend", `<style id="customCSS">${css}</style>`);
             document.querySelector("[name='customCSS']").value = css;
-            document.querySelector("[name='botList']").value = JSON.stringify(getBots("{prompt}"), null, 4);
+            initBotListSettings();
+            
 
             predefinedPrompts = JSON.parse(storageGet("predefinedPrompts")) ?? [...setOfPredefinedPrompts];
             defaultPrompt = parseInt(storageGet("defaultPrompt") ?? -1);
@@ -191,6 +210,117 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 
         }
+    }
+    function initBotListSettings() {
+        const bots = getBots("{prompt}");
+        if (!Object.keys(bots).length)return;
+        chatBots = Object.keys(bots);
+        const botEl = document.querySelector("#botList");
+        botEl.innerHTML = "";
+        for(const bot of Object.keys(bots))
+            botEl.innerHTML += getBotTemplate(bot, bots[bot]);        
+        document.querySelectorAll(".botTemplate").forEach(button => button.addEventListener("click", botAction));
+        document.querySelectorAll(".botSetting [name=\"title\"]").forEach(button => button.addEventListener("blur", botAction));
+        document.querySelectorAll(".botSetting [name=\"botState\"]").forEach(button => button.addEventListener("change", botAction));
+    }
+    function getBotTemplate(bot,data) 
+    {
+        return `
+            <p>Bot:</p>
+            <div class="botSetting" data-id="${bot}">
+            <div class="part1 grid">
+                    <input type="text" data-action="save" name="title" placeholder="title" aria-label="title" value="${bot}">   
+                    <select name="botState" data-action="save" aria-label="Select" required>
+                        <option  id="enabled" value="enabled" name="botState" ${data.state === "enabled" ? "selected" : ""} >Enabled</option>
+                        <option  id="disabled" value="disabled" name="botState" ${data.state === "disabled" ? "selected" : ""} >Disabled</option>
+                        <option  id="hidden" value="hidden" name="botState" ${data.state === "hidden" ? "selected" : ""} >Hidden</option>
+                    </select>
+                    <div class="sort">
+                        <button class="outline secondary botTemplate" data-action="moveUp" data-tooltip="Move Up">
+                        <svg enable-background="new 0 0 32 32" height="16px" id="Layer_1" version="1.1" viewBox="0 0 32 32" width="16px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M18.221,7.206l9.585,9.585c0.879,0.879,0.879,2.317,0,3.195l-0.8,0.801c-0.877,0.878-2.316,0.878-3.194,0  l-7.315-7.315l-7.315,7.315c-0.878,0.878-2.317,0.878-3.194,0l-0.8-0.801c-0.879-0.878-0.879-2.316,0-3.195l9.587-9.585  c0.471-0.472,1.103-0.682,1.723-0.647C17.115,6.524,17.748,6.734,18.221,7.206z" fill="#515151"/></svg>
+                        </button>
+                        <button class="outline botTemplate" data-action="moveDown"  data-tooltip="Move Down">
+                        <svg enable-background="new 0 0 32 32" height="16px" id="Layer_1" version="1.1" viewBox="0 0 32 32" width="16px" xml:space="preserve" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="M14.77,23.795L5.185,14.21c-0.879-0.879-0.879-2.317,0-3.195l0.8-0.801c0.877-0.878,2.316-0.878,3.194,0  l7.315,7.315l7.316-7.315c0.878-0.878,2.317-0.878,3.194,0l0.8,0.801c0.879,0.878,0.879,2.316,0,3.195l-9.587,9.585  c-0.471,0.472-1.104,0.682-1.723,0.647C15.875,24.477,15.243,24.267,14.77,23.795z" fill="#515151"/></svg></button>
+                    </div>
+                </div>
+                                 
+                <div class="part2 grid">
+                    <input type="text" name="url" placeholder="url" aria-label="url" value="${data.link}">
+                    <div role="group">
+                        <button class="outline secondary botTemplate" data-action="delete" data-tooltip="Delete">🗑️</button>
+                        </div>
+                    </div>
+            </div>
+            `;
+    }
+    document.querySelector("#resetBots").addEventListener("click", async () => {
+        await storageSet({ "botList": JSON.stringify(getBots("{prompt}", true)) });
+        window.location.reload();
+    });
+    document.querySelector("#addNewBot").addEventListener("click", async () => {
+        bots = getBots("{prompt}");
+        bots["New Bot"] = { "state": "enabled", "link": "https://www.website.com/?q={prompt}" };
+        await storageSet({ "botList": JSON.stringify(bots) });
+        initBotListSettings();
+    });
+    function botAction(e) 
+    {
+        e.preventDefault();
+        const event = e.target;
+        let bot = event.closest(".botSetting").dataset.id;
+        let bots = { ...getBots("{prompt}") };
+        const botNames = Object.keys(bots);
+        const botIndex = botNames.indexOf(bot);
+        console.log(e, event.dataset.action, bot, botIndex);
+        if(event.dataset.action === "moveUp" || event.dataset.action === "moveDown")
+        {
+            if(botIndex > -1)
+            {
+                if(event.dataset.action === "moveUp" && botIndex > 0)
+                {
+                    botNames.splice(botIndex, 1);
+                    botNames.splice(botIndex-1, 0, bot);
+                }
+                else if(event.dataset.action === "moveDown" && botIndex < botNames.length-2)
+                {
+                    botNames.splice(botIndex, 1);
+                    botNames.splice(botIndex+1, 0, bot);
+                }
+                const newBots = {};
+                for(const bot of botNames)
+                    newBots[bot] = bots[bot];
+                bots = { ...newBots };
+                storageSet({ "botList": JSON.stringify(newBots) });
+
+            }
+        }
+        if(event.dataset.action === "delete")
+        {
+            delete bots[bot];
+            storageSet({ "botList": JSON.stringify(bots) });
+        }
+        if(event.dataset.action === "save")
+        {
+            const newTitle =  event.closest(".botSetting").querySelector("[name='title']").value;
+            console.log(newTitle,bot);
+            if(bot !== newTitle)
+            {
+                bots = changeKey(bots, bot, newTitle);
+                bot = newTitle;
+            }
+            console.log(bots);
+            bots[bot].state = event.closest(".botSetting").querySelector("[name='botState']").value;
+            bots[bot].link = event.closest(".botSetting").querySelector("[name='url']").value;
+            storageSet({ "botList": JSON.stringify(bots) });
+        }
+        initBotListSettings();
+        // chatBots = Object.keys(bots);
+        // const botEl = document.querySelector("#botList");
+        // botEl.innerHTML = "";
+        // for(const bot of Object.keys(bots))
+        //     botEl.innerHTML += getBotTemplate(bot, bots[bot]);
+
+        // document.querySelectorAll(".botTemplate").forEach(button => button.addEventListener("click", botAction));
     }
 
     function predefinedPromptsMiddleButton() {
@@ -241,7 +371,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                     const id = parseInt(event.target.dataset.id);
                     if (id === defaultPrompt) defaultPrompt = -1;
                     else defaultPrompt = id;
-                    console.log(defaultPrompt);
                     storageSet({ "defaultPrompt": defaultPrompt });
                     addPredefinedButtons();
                     return;
@@ -306,7 +435,6 @@ const openChatBots = (query) => {
     }
     if (Object.prototype.hasOwnProperty.call(chrome, "storage")) {
         //remove from botlinks disabledBots
-        // console.log(bots);
         chrome.runtime.sendMessage({
             action: "sendQueryToAssistants",
             query: query,
@@ -324,14 +452,6 @@ const openChatBots = (query) => {
 };
 
 document.querySelector("#saveSettings").addEventListener("click", (event) => {
-    const botList = document.querySelector("textarea[name='botList']").value;
-    try {
-        JSON.parse(botList);
-    } catch (e) {
-        alert(e);
-        return;
-    }
-    storageSet({ "botList": botList });
     toggleModal(event);
     console.log("settings saved");
     const css = document.querySelector("textarea[name='customCSS']").value;

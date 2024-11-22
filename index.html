@@ -58,7 +58,8 @@
                     </article>
                     <main class="shadow1">
                         <div id="chatButtons">
-                            <a href="#" id="openSettings" data-tooltip="Open Settings" data-target="settings-modal" data-placement="left">⚙</a>
+                            <a href="#" id="openSettings" data-tooltip="Open Settings" data-target="settings-modal"
+                                data-placement="left">⚙</a>
                             <div role="group">
                             </div>
                         </div>
@@ -119,8 +120,8 @@
                 <textarea name="prompt" placeholder="You are a very smart AI Assistant and..."
                     aria-label="Prompt Placehoder"></textarea>
                 <footer>
-                    <button class="outline secondary" data-target="edit-modal" id="deletePrompt"> Delete
-                    </button>
+                    <button class="outline secondary closeEvent" data-target="edit-modal"> Cancel </button>
+                    <button class="outline secondary" data-target="edit-modal" id="deletePrompt"> Delete </button>
                     <button data-target="edit-modal" id="savePrompt">Save</button>
                 </footer>
             </article>
@@ -135,7 +136,7 @@
                     <button aria-label="Close" class="closeEvent" rel="prev" data-target="settings-modal"></button>
                     <p><strong>Settings</strong> </p>
                 </header>
-                
+
                 <label>
                     <input type="checkbox" name="ctrlEnter" id="ctrlEnter" />
                     Submit by Ctrl + Enter
@@ -149,10 +150,13 @@
                 <label class="extVisisble">
                     Shortcut: <a data-tooltip="Change Shortcut" id="shortcutEditor" href="#"> Alt+Q</a>
                 </label>
-
-                <p>Bots: <br><small><b>state</b> is "enabled" "disabled" or  "hidden"</small></p>
-                
-                <textarea name="botList" placeholder="Json with bots" aria-label="Json Placehoder" row="30"></textarea>
+                <div id="botList"></div>
+                <div class="botListActions">
+                    <div> <a href="#" id="resetBots">Reset Bots To Default</a>
+                    </div>
+                    <div> <button id="addNewBot">Add New Bot</button>
+                    </div>
+                </div>
 
                 <p>Custom CSS:</p>
                 <textarea name="customCSS" placeholder="Style this app however you want"
