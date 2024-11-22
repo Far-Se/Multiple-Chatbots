@@ -226,7 +226,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     function getBotTemplate(bot,data) 
     {
         return `
-            <p>Bot:</p>
             <div class="botSetting" data-id="${bot}">
             <div class="part1 grid">
                     <input type="text" data-action="save" name="title" placeholder="title" aria-label="title" value="${bot}">   

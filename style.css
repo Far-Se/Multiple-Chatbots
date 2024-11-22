@@ -271,7 +271,7 @@ a#openSettings {
     flex-direction: column;
     justify-content: space-between;
     flex-wrap: wrap;
-    padding-bottom: 10px;
+    padding-bottom: 30px;
 }
 
 .botSetting .grid {
